@@ -42,7 +42,7 @@ void messageCallback(const std_msgs::Int16MultiArray& receivedMsg)
   }
 
   int var_st = receivedMsg.data[2];
-
+\
   if(receivedMsg.data[0]== 0 && receivedMsg.data[1] == 0){
     analogWrite(PWM4, 0);
     analogWrite(PWM6, 0);
@@ -80,20 +80,20 @@ void callback(const geometry_msgs::Point &msg){
   x=msg.x;
   y=msg.y;
   if(x!=0){
-    s1.write(90+x*65);
+    s1.write(90+x*45);
     delay(200);
     s1.write(90);
   }
   if(y!=0){
-    s2.write(90+y*65);
-    delay(90);
-    s2.write(105);
+    s2.write(90+y*25);
+    delay(200);
+    s2.write(90);
     
     }
 }
 
 ros::Subscriber<std_msgs::Int16MultiArray> sub1("/control1", messageCallback); 
-ros::Subscriber<geometry_msgs::Point> sub("cam_gimble",&callback);
+ros::Subscriber<geometry_msgs::Point> sub2("cam_gimble",&callback);
 
 
 void setup(){
@@ -102,19 +102,19 @@ void setup(){
   pinMode(DIR6,OUTPUT);
   pinMode(PWM6,OUTPUT);
   pinMode(POT1,INPUT);
+  pinMode(3,OUTPUT);
   s1.attach(7);
   s2.attach(8);
   digitalWrite(stepperenablepin, LOW);
-  pinMode(3,OUTPUT);
+
   n.initNode();
   n.subscribe(sub1);
+  n.subscribe(sub2);
 }
 
 void loop(){
   s1.write(90);
   s2.write(90);
-  n.subscribe(sub);
-  n.advertise(pub);
   n.spinOnce();
 }
 
